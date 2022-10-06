@@ -1,0 +1,68 @@
+server:
+  port: 8080
+  error:
+    include-binding-errors: always
+    include-exception: true
+
+
+logging:
+  level:
+    org:
+      springframework:
+        web: trace
+      thingder: debug
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+
+    url: jdbc:mariadb://thingder_mariadb_1/thingder?useLegacyDatetimeCode=false&characterEncoding=UTF-8&useMysqlMetadata=true
+    username: thingder
+    password: thingder
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        user_sql_comments: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+naver:
+  client_id: xcypyocbdy
+  client_secret: L3fVlcrsjJMVdiEjz8OYPJS0JLXFcfezHzs5JDgy
+  api:
+    access_key_id: vfv1vDMMFhEVKBwEAmfK
+    secret_key: 4DsV7Z6ZqcKsBwiO9PGlPBmEp0M1AnY3718oUc6n
+  sms:
+    service_id: ncp:sms:kr:291669027352:thingder
+    secret_key: d2401268c2ed48c69cce6526d43a6fe6
+    calling_number: 01034795867
+
+
+pin:
+  length: 6
+  expiration_time: 180 # 60 * 3
+
+token:
+  pin:
+    ttl: 300
+    secret: 9hgg$@a132B6
+  access:
+    ttl: 2592000 # = 30 * 24 * 60 * 60; // 1 month
+    secret: a6$26!L&aK$x
+  refresh:
+    ttl: 2592000 # = 30 * 24 * 60 * 60; // 1 month
+    secret: u$NSt2y4*m*5

@@ -8,9 +8,9 @@ docker rm thingder_api_1;
 
 docker run \
     --network thingder_network \
-    -p 8080:8080 \
+    -p 38080:8080 \
     --name thingder_api_1 \
     -d \
-    rife_api ;
+    thingder_api ;
 
 docker system prune --volumes -f -a;

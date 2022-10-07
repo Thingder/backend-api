@@ -5,10 +5,7 @@ import com.redcutlery.thingder.api.member.transaction.MemberTransaction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -23,5 +20,10 @@ public class MemberController {
     @GetMapping("/{memberUid}")
     public MemberResponse find(@PathVariable UUID memberUid) {
         return memberTransaction.find(memberUid);
+    }
+
+    @DeleteMapping("/delete")
+    public void delete(){
+        memberTransaction.delete();
     }
 }

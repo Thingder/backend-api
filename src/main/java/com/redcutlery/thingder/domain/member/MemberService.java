@@ -63,4 +63,8 @@ public class MemberService {
             return subject;
         return null;
     }
+
+    public void delete(Member member) {
+        memberRepository.delete(member);
+    }
 }

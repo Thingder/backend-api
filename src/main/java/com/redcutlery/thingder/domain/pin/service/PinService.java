@@ -24,8 +24,11 @@ public class PinService {
 
     public Pin findOrCreate(String phone) {
         var exist = pinRepository.findByPhone(phone);
-        if (exist.isPresent())
-            return exist.get();
+        if (exist.isPresent()) {
+            var pin = exist.get();
+            pin.setExpireAt(LocalDateTime.now().plusSeconds(PIN_EXPIRATION_TIME));
+            return pinRepository.save(pin);
+        }
         var pin = new Pin(phone, generate(PIN_LENGTH), LocalDateTime.now().plusSeconds(PIN_EXPIRATION_TIME));
         return pinRepository.save(pin);
     }

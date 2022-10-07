@@ -52,13 +52,15 @@ public class MemberService {
         return members;
     }
 
-    public boolean pick(PickRequest pickRequest, Member member) {
+    public Member pick(PickRequest pickRequest, Member member) {
         var subject = findByUid(pickRequest.getUid());
 
         var memberMember = new MemberMember(member, subject, pickRequest.getRelation());
         member.getPicks().add(memberMember);
 
-        return pickRequest.getRelation().equals(MemberRelation.LIKE) &&
-                memberMemberService.checkByPickerAndSubject(subject, member);
+        if (pickRequest.getRelation().equals(MemberRelation.LIKE) &&
+                memberMemberService.checkByPickerAndSubject(subject, member))
+            return subject;
+        return null;
     }
 }

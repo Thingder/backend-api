@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Log4j2
 @Configuration
@@ -31,7 +34,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.csrf().disable();
+        http.cors().configurationSource(corsConfigurationSource());
         http.headers().frameOptions().disable();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        var configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:3000/");
+        configuration.addAllowedOrigin("https://thingder.app/");
+
+        configuration.addAllowedHeader("*");
+
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        var source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        configuration.addAllowedOrigin("http://localhost:3000/");
 //        configuration.addAllowedOrigin("https://thingder.app/");
 
-        configuration.addAllowedOrigin("*");
+        configuration.addAllowedOriginPattern("*");
 
         configuration.addAllowedHeader("*");
 

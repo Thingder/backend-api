@@ -8,7 +8,7 @@ docker rm thingder_api_1;
 
 docker run \
     --network thingder_network \
-    -p 8083:8080 \
+    -p 8080:8080 \
     --name thingder_api_1 \
     -d \
     thingder_api ;

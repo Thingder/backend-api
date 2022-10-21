@@ -1,24 +1,29 @@
 package com.redcutlery.thingder.api.matching.dto.pick;
 
-import com.redcutlery.thingder.api.member.dto.find.MemberResponse;
-import com.redcutlery.thingder.domain.member.entity.Member;
+import com.redcutlery.thingder.domain.MemberRelation.entity.MemberRelation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
+
+import java.util.UUID;
 
 @Data
 @ToString
 @AllArgsConstructor
 public class PickResponse {
-    private boolean isMatch;
-    private MemberResponse member;
+    private UUID chatUid;
+    private boolean isMatch = false;
+    public PickResponse(MemberRelation memberRelation) {
+        if (memberRelation.getRelationType().equals(MemberRelation.RelationType.LIKE)) {
+            var chat = memberRelation.getChatRoom();
+            this.chatUid = chat.getUid();
 
-    public PickResponse(Member member) {
-        if (member == null) {
-            this.isMatch = false;
-        } else {
-            this.isMatch = true;
-            this.member = new MemberResponse(member);
+            var targetRelationExist = chat.getMemberRelations().stream()
+                    .filter(r -> r.getTarget().equals(memberRelation.getMember()) && r.getRelationType().equals(MemberRelation.RelationType.LIKE))
+                    .findFirst();
+
+            if (targetRelationExist.isPresent())
+                this.isMatch = true;
         }
     }
 }

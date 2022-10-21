@@ -26,7 +26,6 @@ public class MatchingTransaction {
 
     public PickResponse pick(PickRequest pickRequest) {
         var member = memberService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-
-        return new PickResponse( memberService.pick(pickRequest, member));
+        return new PickResponse(memberService.pick(pickRequest, member));
     }
 }

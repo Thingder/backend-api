@@ -2,11 +2,15 @@ package com.redcutlery.thingder.domain.member;
 
 import com.redcutlery.thingder.api.auth.dto.register.RegisterRequest;
 import com.redcutlery.thingder.api.matching.dto.pick.PickRequest;
+import com.redcutlery.thingder.domain.MemberRelation.entity.MemberRelation;
+import com.redcutlery.thingder.domain.MemberRelation.repository.MemberRelationRepository;
+import com.redcutlery.thingder.domain.MemberRelation.serivce.MemberRelationService;
+import com.redcutlery.thingder.domain.chat.entity.ChatRoom;
+import com.redcutlery.thingder.domain.chat.repository.ChatMessageRepository;
+import com.redcutlery.thingder.domain.chat.repository.ChatRoomRepository;
+import com.redcutlery.thingder.domain.chat.serivce.ChatService;
 import com.redcutlery.thingder.domain.member.entity.Member;
 import com.redcutlery.thingder.domain.member.repository.MemberRepository;
-import com.redcutlery.thingder.domain.memberMember.entity.MemberMember;
-import com.redcutlery.thingder.domain.memberMember.param.MemberRelation;
-import com.redcutlery.thingder.domain.memberMember.service.MemberMemberService;
 import com.redcutlery.thingder.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +25,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final MemberMemberService memberMemberService;
+    private final MemberRelationService memberRelationService;
+    private final ChatRoomRepository chatRoomRepository;
+    private final MemberRelationRepository memberRelationRepository;
+    private final ChatMessageRepository chatMessageRepository;
+    private final ChatService chatService;
 
     public Member findByUid(UUID uid) {
         return memberRepository.findById(uid)
@@ -52,16 +60,26 @@ public class MemberService {
         return members;
     }
 
-    public Member pick(PickRequest pickRequest, Member member) {
-        var subject = findByUid(pickRequest.getUid());
+    public MemberRelation pick(PickRequest pickRequest, Member member) {
+        var target = findByUid(pickRequest.getUid());
 
-        var memberMember = new MemberMember(member, subject, pickRequest.getRelation());
-        member.getPicks().add(memberMember);
+        var memberRelation = new MemberRelation(member, target, pickRequest.getRelation());
 
-        if (pickRequest.getRelation().equals(MemberRelation.LIKE) &&
-                memberMemberService.checkByPickerAndSubject(subject, member))
-            return subject;
-        return null;
+        if (memberRelation.getRelationType().equals(MemberRelation.RelationType.LIKE)) {
+            var targetRelationExist = memberRelationService.findByMemberAndTarget(target, member);
+
+            if (targetRelationExist.isPresent()) {
+                var targetRelation = targetRelationExist.get();
+                if (targetRelation.getRelationType().equals(MemberRelation.RelationType.LIKE)) {
+                    var chat = targetRelation.getChatRoom();
+                    chat.addMemberRelation(memberRelation);
+                }
+            } else {
+                var chat = new ChatRoom();
+                chat.addMemberRelation(memberRelation);
+            }
+        }
+        return memberRelationRepository.save(memberRelation);
     }
 
     public void delete(Member member) {

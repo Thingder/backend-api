@@ -2,11 +2,11 @@ package com.redcutlery.thingder.domain.member.entity;
 
 import com.google.common.collect.Streams;
 import com.redcutlery.thingder.api.auth.dto.register.RegisterRequest;
+import com.redcutlery.thingder.domain.MemberRelation.entity.MemberRelation;
 import com.redcutlery.thingder.domain.image.dto.InsertImage;
 import com.redcutlery.thingder.domain.image.dto.SelectImage;
 import com.redcutlery.thingder.domain.member.param.MemberRole;
 import com.redcutlery.thingder.domain.memberImage.entity.MemberImage;
-import com.redcutlery.thingder.domain.memberMember.entity.MemberMember;
 import lombok.*;
 
 import javax.persistence.*;
@@ -48,11 +48,11 @@ public class Member {
     private String description;
     private String story;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "picker")
-    List<MemberMember> picks = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    List<MemberRelation> picks = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject")
-    List<MemberMember> subjects = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "target")
+    List<MemberRelation> subjects = new ArrayList<>();
 
     public Member(RegisterRequest registerRequest) {
         this.email = registerRequest.getEmail();

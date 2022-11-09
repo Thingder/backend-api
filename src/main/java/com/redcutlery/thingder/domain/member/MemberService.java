@@ -6,9 +6,6 @@ import com.redcutlery.thingder.domain.MemberRelation.entity.MemberRelation;
 import com.redcutlery.thingder.domain.MemberRelation.repository.MemberRelationRepository;
 import com.redcutlery.thingder.domain.MemberRelation.serivce.MemberRelationService;
 import com.redcutlery.thingder.domain.chat.entity.ChatRoom;
-import com.redcutlery.thingder.domain.chat.repository.ChatMessageRepository;
-import com.redcutlery.thingder.domain.chat.repository.ChatRoomRepository;
-import com.redcutlery.thingder.domain.chat.serivce.ChatService;
 import com.redcutlery.thingder.domain.member.entity.Member;
 import com.redcutlery.thingder.domain.member.repository.MemberRepository;
 import com.redcutlery.thingder.exception.BaseException;
@@ -26,10 +23,7 @@ import java.util.stream.Collectors;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberRelationService memberRelationService;
-    private final ChatRoomRepository chatRoomRepository;
     private final MemberRelationRepository memberRelationRepository;
-    private final ChatMessageRepository chatMessageRepository;
-    private final ChatService chatService;
 
     public Member findByUid(UUID uid) {
         return memberRepository.findById(uid)

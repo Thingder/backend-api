@@ -12,8 +12,6 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
-
 public class ChatMessage {
     public enum MessageType {
         ENTER, TALK

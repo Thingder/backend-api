@@ -33,7 +33,7 @@ public class ChatService {
         return chatMessageRepository.save(chatMessage);
     }
 
-    private ChatRoom findByUid(UUID roomUid) {
+    public ChatRoom findByUid(UUID roomUid) {
         return chatRoomRepository.findById(roomUid)
                 .orElseThrow(() -> new BaseException.BadRequest("존재하지 않는 채팅방입니다."));
     }

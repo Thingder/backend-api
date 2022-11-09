@@ -14,14 +14,13 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class ChatRoom {
     @Id
     @GeneratedValue
     @Column(name = "uid", columnDefinition = "BINARY(16)")
     private UUID uid;
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-    private List<MemberRelation> memberRelations;
+    private List<MemberRelation> memberRelations = new ArrayList<>();
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<ChatMessage> messages = new ArrayList<>();
 

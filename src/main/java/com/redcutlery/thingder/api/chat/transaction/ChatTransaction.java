@@ -1,5 +1,6 @@
 package com.redcutlery.thingder.api.chat.transaction;
 
+import com.redcutlery.thingder.api.chat.dto.FindRoomResponse;
 import com.redcutlery.thingder.api.chat.dto.MessageRequest;
 import com.redcutlery.thingder.domain.chat.serivce.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.UUID;
 
 @Log4j2
 @Service
@@ -22,5 +24,9 @@ public class ChatTransaction {
         messagingTemplate.convertAndSend(
                 "/sub/chat/room" + messageRequest.getRoomUid()
                 , message);
+    }
+
+    public FindRoomResponse findRoom(UUID chatRoomUid) {
+        return new FindRoomResponse(chatService.findByUid(chatRoomUid));
     }
 }

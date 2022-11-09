@@ -21,7 +21,7 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
 
-    url: jdbc:mariadb://thingder_mariadb_1/thingder?useLegacyDatetimeCode=false&characterEncoding=UTF-8&useMysqlMetadata=true
+    url: jdbc:mariadb://thingder-mariadb.ctmfufscyd5f.ap-northeast-2.rds.amazonaws.com:3306/thingder?useLegacyDatetimeCode=false&characterEncoding=UTF-8&useMysqlMetadata=true
     username: thingder
     password: thingder
 

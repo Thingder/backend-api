@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Log4j2
@@ -36,5 +37,9 @@ public class ChatService {
     public ChatRoom findByUid(UUID roomUid) {
         return chatRoomRepository.findById(roomUid)
                 .orElseThrow(() -> new BaseException.BadRequest("존재하지 않는 채팅방입니다."));
+    }
+
+    public List<ChatRoom> findAll() {
+        return chatRoomRepository.findAll();
     }
 }

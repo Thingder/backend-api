@@ -9,6 +9,7 @@ import com.redcutlery.thingder.api.auth.dto.register.RegisterResponse;
 import com.redcutlery.thingder.api.auth.dto.sendPin.SendPinResponse;
 import com.redcutlery.thingder.api.auth.transaction.AuthTransaction;
 import com.redcutlery.thingder.domain.member.MemberService;
+import com.redcutlery.thingder.domain.member.param.MemberRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.Set;
 
 @Log4j2
 @RestController
@@ -48,7 +50,7 @@ public class AuthController {
 
     @GetMapping("/my")
     @Transactional
-    public void my() {
+    public Set<MemberRole> my() {
         var context = SecurityContextHolder.getContext();
 
         var authentication = context.getAuthentication();
@@ -67,7 +69,8 @@ public class AuthController {
         log.info("details: " + details);
         log.info("name: " + name);
         log.info("principal: " + principal);
-
-        log.info(memberService.findByEmail(name));
+        var member = memberService.findByEmail(name);
+        log.info(member);
+        return member.getRoleSet();
     }
 }

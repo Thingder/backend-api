@@ -27,6 +27,7 @@ public class ChatMessage {
     private MessageType type;
     @ManyToOne
     private Member sender;
+    @Column(columnDefinition = "TEXT")
     private String message;
 
     public ChatMessage(Member member, ChatRoom room, String message) {

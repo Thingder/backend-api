@@ -33,6 +33,13 @@ public class Member {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<MemberRole> roleSet = new HashSet<>();
 
+    public enum Status {
+        BANNED,
+        CERTIFIED
+    }
+
+    private Status status;
+
     @ToString.Exclude
     @OrderBy("idx asc")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

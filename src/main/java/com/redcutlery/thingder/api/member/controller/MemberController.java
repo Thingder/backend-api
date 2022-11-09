@@ -1,6 +1,7 @@
 package com.redcutlery.thingder.api.member.controller;
 
 import com.redcutlery.thingder.api.member.dto.find.MemberResponse;
+import com.redcutlery.thingder.api.member.dto.report.ReqReportProfile;
 import com.redcutlery.thingder.api.member.transaction.MemberTransaction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +24,12 @@ public class MemberController {
     }
 
     @DeleteMapping("/delete")
-    public void delete(){
+    public void delete() {
         memberTransaction.delete();
+    }
+
+    @PostMapping("/{memberUid}/report")
+    public void report(@PathVariable UUID memberUid, @RequestBody ReqReportProfile reqReportProfile) {
+        memberTransaction.report(memberUid, reqReportProfile);
     }
 }

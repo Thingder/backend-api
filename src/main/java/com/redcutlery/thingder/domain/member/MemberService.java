@@ -49,6 +49,7 @@ public class MemberService {
 
         members = members.stream()
                 .filter(m -> !m.getPicks().contains(member))
+                .filter(m -> !m.equals(member))
                 .collect(Collectors.toList());
 
         return members;
@@ -78,5 +79,15 @@ public class MemberService {
 
     public void delete(Member member) {
         memberRepository.delete(member);
+    }
+
+    public List<Member> findAll() {
+        return memberRepository.findAll();
+    }
+
+    public Member setStatus(UUID memberUid, Member.Status status) {
+        var member = findByUid(memberUid);
+        member.setStatus(status);
+        return memberRepository.save(member);
     }
 }

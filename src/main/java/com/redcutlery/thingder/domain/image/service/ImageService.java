@@ -5,6 +5,7 @@ import com.redcutlery.thingder.domain.image.entity.ResizedImageFile;
 import com.redcutlery.thingder.domain.image.repository.ImageFileRepository;
 import com.redcutlery.thingder.domain.image.repository.ResizedImageFileRepository;
 import com.redcutlery.thingder.exception.BaseException;
+import com.redcutlery.thingder.module.aws.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.imgscalr.Scalr;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -33,6 +35,7 @@ import java.util.Objects;
 public class ImageService {
     private final ImageFileRepository imageFileRepository;
     private final ResizedImageFileRepository resizedImageFileRepository;
+    private final S3Service s3Service;
 
     public ImageFile uploadImage(MultipartFile file) throws NoSuchAlgorithmException, IOException {
         if (!Objects.requireNonNull(file.getContentType()).startsWith("image/"))
@@ -128,5 +131,56 @@ public class ImageService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ImageFile upload(MultipartFile image) throws NoSuchAlgorithmException, IOException {
+        if (!Objects.requireNonNull(image.getContentType()).startsWith("image/"))
+            throw new BaseException.BadRequest("이미지 파일이 아닙니다.");
+
+        var sha256 = getSha256(image);
+
+        var exist = imageFileRepository.findBySha256(sha256);
+        if (exist.isPresent())
+            return exist.get();
+
+        var contentType = image.getContentType();
+        var originalFilename = image.getOriginalFilename();
+
+        var uri = String.format("image/%s/%s", sha256, originalFilename);
+
+        var url = s3Service.uploadBytes(image.getBytes(), uri, contentType);
+
+        var imageFile = ImageFile.builder()
+                .originalName(originalFilename)
+                .url(url)
+                .sha256(sha256)
+                .size(image.getSize())
+                .build();
+
+        Arrays.asList(1043, 750, 640, 480, 320, 240).forEach(width -> {
+            try {
+                var resizedBytes = resizeImageFile(image, width);
+                var resizedUri = String.format("image/%s/%dw__%s", sha256, width, originalFilename);
+                var resizedUrl = s3Service.uploadBytes(resizedBytes, resizedUri, contentType);
+                var resizedImageFile = ResizedImageFile.builder()
+                        .width(width)
+                        .url(resizedUrl)
+                        .size((long) resizedBytes.length)
+                        .build();
+                imageFile.addResizedImageFile(resizedImageFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return imageFileRepository.save(imageFile);
+    }
+    private byte[] resizeImageFile(MultipartFile image, Integer width) throws IOException {
+        var format = Objects.requireNonNull(image.getContentType()).substring("image/".length());
+        var bufferedImage = ImageIO.read(image.getInputStream());
+        var resizedImage = Scalr.resize(bufferedImage, width, bufferedImage.getHeight() * width / bufferedImage.getWidth());
+        var resizedBytesOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, format, resizedBytesOutputStream);
+        return resizedBytesOutputStream.toByteArray();
     }
 }

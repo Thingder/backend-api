@@ -1,13 +1,19 @@
 package com.redcutlery.thingder.domain.auth.serivce;
 
+import com.redcutlery.thingder.api.auth.dto.checkEmail.CheckEmailRequest;
 import com.redcutlery.thingder.api.auth.dto.checkPin.CheckPinRequest;
 import com.redcutlery.thingder.api.auth.dto.login.LoginRequest;
 import com.redcutlery.thingder.api.auth.dto.register.RegisterRequest;
+import com.redcutlery.thingder.api.auth.dto.resetPassword.ResetPasswordRequest;
+import com.redcutlery.thingder.domain.emailPin.entity.EmailPin;
+import com.redcutlery.thingder.domain.emailPin.service.EmailPinService;
 import com.redcutlery.thingder.domain.member.MemberService;
+import com.redcutlery.thingder.domain.member.entity.Member;
 import com.redcutlery.thingder.domain.pin.entity.Pin;
 import com.redcutlery.thingder.domain.pin.service.PinService;
 import com.redcutlery.thingder.domain.security.service.UserDetailsServiceImpl;
 import com.redcutlery.thingder.exception.BaseException;
+import com.redcutlery.thingder.module.email.service.EmailService;
 import com.redcutlery.thingder.module.naver.dto.SMSRequest.MessagesItem;
 import com.redcutlery.thingder.module.naver.service.NaverService;
 import com.redcutlery.thingder.module.token.dto.Token;
@@ -25,6 +31,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthService {
     private final PinService pinService;
+    private final EmailPinService emailPinService;
+    private final EmailService emailService;
     private final NaverService naverService;
     private final TokenService tokenService;
     private final MemberService memberService;
@@ -45,6 +53,18 @@ public class AuthService {
         return tokenService.generatePin(checkPinRequest.getPhone());
     }
 
+    public EmailPin sendEmail(String email) {
+        var emailPin = emailPinService.findOrCreate(email);
+
+        emailService.sendPin(emailPin);
+        return emailPin;
+    }
+
+    public Token checkEmail(CheckEmailRequest checkEmailRequest) {
+        emailPinService.check(checkEmailRequest);
+        return tokenService.generateEmail(checkEmailRequest.getEmail());
+    }
+
     public Token register(RegisterRequest registerRequest) {
         var verifyResult = tokenService.validatePin(registerRequest.getPinToken());
 
@@ -62,14 +82,29 @@ public class AuthService {
         return tokenService.generateAccess(member.getEmail());
     }
 
+    public Member resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        var verifyResult = tokenService.validatePin(resetPasswordRequest.getEmailToken());
+
+        if (!verifyResult.isSuccess())
+            throw new BaseException.BadRequest("유효하지 않은 이메일 토큰입니다.");
+
+        var member = memberService.findByEmail(verifyResult.getSubject());
+
+        return memberService.setPassword(member, resetPasswordRequest.getPassword());
+    }
+
     public Token login(LoginRequest loginRequest) {
         var member = memberService.findByEmail(loginRequest.getEmail());
 
-        if(!loginRequest.getPassword().equals(member.getPassword()))
-            throw  new BaseException.BadRequest("잘못된 계정 정보입니다.");
+        if (!loginRequest.getPassword().equals(member.getPassword()))
+            throw new BaseException.BadRequest("잘못된 계정 정보입니다.");
         var userDetails = userDetailsService.loadUserByUsername(member.getEmail());
         var authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return tokenService.generateAccess(member.getEmail());
+    }
+
+    public void createAdmin(LoginRequest loginRequest) {
+        memberService.createAdmin(loginRequest);
     }
 }

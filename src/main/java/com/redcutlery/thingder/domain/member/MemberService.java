@@ -1,5 +1,6 @@
 package com.redcutlery.thingder.domain.member;
 
+import com.redcutlery.thingder.api.auth.dto.login.LoginRequest;
 import com.redcutlery.thingder.api.auth.dto.register.RegisterRequest;
 import com.redcutlery.thingder.api.matching.dto.pick.PickRequest;
 import com.redcutlery.thingder.domain.MemberRelation.entity.MemberRelation;
@@ -7,6 +8,7 @@ import com.redcutlery.thingder.domain.MemberRelation.repository.MemberRelationRe
 import com.redcutlery.thingder.domain.MemberRelation.serivce.MemberRelationService;
 import com.redcutlery.thingder.domain.chat.entity.ChatRoom;
 import com.redcutlery.thingder.domain.member.entity.Member;
+import com.redcutlery.thingder.domain.member.param.MemberRole;
 import com.redcutlery.thingder.domain.member.repository.MemberRepository;
 import com.redcutlery.thingder.exception.BaseException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,6 +40,7 @@ public class MemberService {
     public Member register(RegisterRequest registerRequest, String phone) {
         var member = new Member(registerRequest);
         member.setPhone(phone);
+        member.setRoleSet(Set.of(MemberRole.USER));
         return memberRepository.save(member);
     }
 
@@ -58,7 +62,8 @@ public class MemberService {
     public MemberRelation pick(PickRequest pickRequest, Member member) {
         var target = findByUid(pickRequest.getUid());
 
-        var memberRelation = new MemberRelation(member, target, pickRequest.getRelation());
+        var memberRelation = memberRelationRepository.findByMemberAndTarget(member, target)
+                .orElseGet(() -> memberRelationRepository.save(new MemberRelation(member, target, pickRequest.getRelation())));
 
         if (memberRelation.getRelationType().equals(MemberRelation.RelationType.LIKE)) {
             var targetRelationExist = memberRelationService.findByMemberAndTarget(target, member);
@@ -88,6 +93,19 @@ public class MemberService {
     public Member setStatus(UUID memberUid, Member.Status status) {
         var member = findByUid(memberUid);
         member.setStatus(status);
+        return memberRepository.save(member);
+    }
+
+    public Member createAdmin(LoginRequest loginRequest) {
+        var member = new Member();
+        member.setEmail(loginRequest.getEmail());
+        member.setPassword(loginRequest.getPassword());
+        member.setRoleSet(Set.of(MemberRole.ADMIN));
+        return memberRepository.save(member);
+    }
+
+    public Member setPassword(Member member, String password) {
+        member.setPassword(password);
         return memberRepository.save(member);
     }
 }

@@ -1,11 +1,15 @@
 package com.redcutlery.thingder.api.auth.controller;
 
+import com.redcutlery.thingder.api.auth.dto.checkEmail.CheckEmailRequest;
+import com.redcutlery.thingder.api.auth.dto.checkEmail.CheckEmailResponse;
 import com.redcutlery.thingder.api.auth.dto.checkPin.CheckPinRequest;
 import com.redcutlery.thingder.api.auth.dto.checkPin.CheckPinResponse;
 import com.redcutlery.thingder.api.auth.dto.login.LoginRequest;
 import com.redcutlery.thingder.api.auth.dto.login.LoginResponse;
 import com.redcutlery.thingder.api.auth.dto.register.RegisterRequest;
 import com.redcutlery.thingder.api.auth.dto.register.RegisterResponse;
+import com.redcutlery.thingder.api.auth.dto.resetPassword.ResetPasswordRequest;
+import com.redcutlery.thingder.api.auth.dto.sendEmail.SendEmailResponse;
 import com.redcutlery.thingder.api.auth.dto.sendPin.SendPinResponse;
 import com.redcutlery.thingder.api.auth.transaction.AuthTransaction;
 import com.redcutlery.thingder.domain.member.MemberService;
@@ -36,6 +40,16 @@ public class AuthController {
         return authTransaction.checkPin(checkPinRequest);
     }
 
+    @PostMapping("/email/send")
+    public SendEmailResponse sendEmail(@RequestParam String email) {
+        return authTransaction.sendEmail(email);
+    }
+
+    @PostMapping("/email/check")
+    public CheckEmailResponse checkEmail(@RequestParam CheckEmailRequest checkEmailRequest) {
+        return authTransaction.checkEmail(checkEmailRequest);
+    }
+
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody @Valid RegisterRequest registerRequest) {
         return authTransaction.register(registerRequest);
@@ -44,6 +58,16 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody @Valid LoginRequest loginRequest) {
         return authTransaction.login(loginRequest);
+    }
+
+    @PostMapping("/reset-password")
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        authTransaction.resetPassword(resetPasswordRequest);
+    }
+
+    @PostMapping("/create-admin")
+    public void createAdmin(@RequestBody @Valid LoginRequest loginRequest) {
+        authTransaction.createAdmin(loginRequest);
     }
 
     private final MemberService memberService;

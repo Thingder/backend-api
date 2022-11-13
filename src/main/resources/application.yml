@@ -35,10 +35,33 @@ spring:
         show_sql: true
         user_sql_comments: true
 
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: secure.thingder
+    password: wlqqrcitrbdglxja
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    sender-address: secure.thingder@gmail.com
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAULX25NTAZE3RK5DH
+      secret-key: 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
+    s3:
+      bucket: thingder-s3
+    region:
+      static: ap-northeast-2
 
 naver:
   client_id: xcypyocbdy
@@ -66,3 +89,4 @@ token:
   refresh:
     ttl: 2592000 # = 30 * 24 * 60 * 60; // 1 month
     secret: u$NSt2y4*m*5
+

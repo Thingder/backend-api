@@ -21,7 +21,8 @@ public class MemberElementResponse {
 
     public MemberElementResponse(Member member) {
         this.uid = member.getUid();
-        this.image = new SelectImage(member.getImages().get(0));
+        if (member.getImages() != null)
+            this.image = new SelectImage(member.getImages().get(0));
         this.nickname = member.getNickname();
         this.type = member.getType();
         this.genYear = member.getGenYear();

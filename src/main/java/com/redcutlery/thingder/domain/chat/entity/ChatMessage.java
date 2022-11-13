@@ -21,7 +21,7 @@ public class ChatMessage {
     @GeneratedValue
     @Column(name = "uid", columnDefinition = "BINARY(16)")
     private UUID uid;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "room_uid")
     private ChatRoom room;
     private MessageType type;

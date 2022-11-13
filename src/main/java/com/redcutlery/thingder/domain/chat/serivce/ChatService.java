@@ -1,5 +1,7 @@
 package com.redcutlery.thingder.domain.chat.serivce;
 
+import com.redcutlery.thingder.api.chat.dto.MessageRequest;
+import com.redcutlery.thingder.domain.chat.entity.ChatMessage;
 import com.redcutlery.thingder.domain.chat.entity.ChatRoom;
 import com.redcutlery.thingder.domain.chat.repository.ChatMessageRepository;
 import com.redcutlery.thingder.domain.chat.repository.ChatRoomRepository;
@@ -20,16 +22,16 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final MemberService memberService;
 
-//    public Object saveMessage(MessageRequest messageRequest) {
-//        var member = memberService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-//
-//        var room = findByUid(messageRequest.getRoomUid());
-//        var chatMessage = new ChatMessage(member, room, messageRequest.getMessage());
-//
-//        chatMessage.setChatRoom(room);
-//
-//        return chatMessageRepository.save(chatMessage);
-//    }
+    public ChatMessage saveMessage(MessageRequest messageRequest) {
+        var member = memberService.findByUid(messageRequest.getUserUid());
+
+        var room = findByUid(messageRequest.getRoomUid());
+        var chatMessage = new ChatMessage(member, room, messageRequest.getMessage());
+
+        chatMessage.setChatRoom(room);
+
+        return chatMessageRepository.save(chatMessage);
+    }
 
     public ChatRoom findByUid(UUID roomUid) {
         return chatRoomRepository.findById(roomUid)

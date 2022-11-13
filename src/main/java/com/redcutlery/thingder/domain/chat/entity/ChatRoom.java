@@ -19,9 +19,9 @@ public class ChatRoom {
     @GeneratedValue
     @Column(name = "uid", columnDefinition = "BINARY(16)")
     private UUID uid;
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MemberRelation> memberRelations = new ArrayList<>();
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ChatMessage> messages = new ArrayList<>();
 
     public void addMemberRelation(MemberRelation memberRelation) {

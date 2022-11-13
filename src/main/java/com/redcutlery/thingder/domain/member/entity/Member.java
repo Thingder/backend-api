@@ -44,7 +44,7 @@ public class Member {
 
     @ToString.Exclude
     @OrderBy("idx asc")
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberImage> images = new ArrayList<>();
 
     private String nickname;
@@ -102,8 +102,9 @@ public class Member {
     }
 
     public void insertImages(List<InsertImage> images) {
-        this.images = Streams.mapWithIndex(images.stream(), this::insertImage)
-                .collect(Collectors.toList());
+        this.images.clear();
+        this.images.addAll(Streams.mapWithIndex(images.stream(), this::insertImage)
+                .collect(Collectors.toList()));
     }
 
     public List<SelectImage> selectImages() {

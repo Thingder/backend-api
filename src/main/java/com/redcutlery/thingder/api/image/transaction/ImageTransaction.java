@@ -1,6 +1,6 @@
 package com.redcutlery.thingder.api.image.transaction;
 
-import com.redcutlery.thingder.api.image.dto.uploadImageResponse;
+import com.redcutlery.thingder.api.image.dto.UploadImageResponse;
 import com.redcutlery.thingder.domain.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -18,11 +18,15 @@ import java.security.NoSuchAlgorithmException;
 public class ImageTransaction {
     private final ImageService imageService;
 
-    public uploadImageResponse uploadImage(MultipartFile file) throws NoSuchAlgorithmException, IOException {
-        return new uploadImageResponse(imageService.uploadImage(file));
+    public UploadImageResponse uploadImage(MultipartFile file) throws NoSuchAlgorithmException, IOException {
+        return new UploadImageResponse(imageService.uploadImage(file));
     }
 
     public ResponseEntity<Resource> getImageFileByPath(String fileName) {
         return imageService.getImageFileByPath(fileName);
+    }
+
+    public UploadImageResponse upload(MultipartFile file) throws NoSuchAlgorithmException, IOException {
+        return new UploadImageResponse(imageService.upload(file));
     }
 }

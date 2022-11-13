@@ -56,9 +56,11 @@ public class Member {
     private String story;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    @ToString.Exclude
     List<MemberRelation> picks = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "target")
+    @ToString.Exclude
     List<MemberRelation> subjects = new ArrayList<>();
 
     public Member(RegisterRequest registerRequest) {

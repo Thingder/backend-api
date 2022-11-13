@@ -1,7 +1,6 @@
 package com.redcutlery.thingder.api.chat.transaction;
 
 import com.redcutlery.thingder.api.chat.dto.FindRoomResponse;
-import com.redcutlery.thingder.api.chat.dto.MessageRequest;
 import com.redcutlery.thingder.api.chat.dto.report.ReqReportChat;
 import com.redcutlery.thingder.domain.chat.serivce.ChatService;
 import com.redcutlery.thingder.domain.member.MemberService;
@@ -24,12 +23,12 @@ public class ChatTransaction {
     private final ChatReportService chatReportService;
     private final MemberService memberService;
 
-    public void message(MessageRequest messageRequest) {
-        var message = chatService.saveMessage(messageRequest);
-        messagingTemplate.convertAndSend(
-                "/sub/chat/room" + messageRequest.getRoomUid()
-                , message);
-    }
+//    public void message(MessageRequest messageRequest) {
+//        var message = chatService.saveMessage(messageRequest);
+//        messagingTemplate.convertAndSend(
+//                "/sub/chat/room" + messageRequest.getRoomUid()
+//                , message);
+//    }
 
     public FindRoomResponse findRoom(UUID chatRoomUid) {
         return new FindRoomResponse(chatService.findByUid(chatRoomUid));

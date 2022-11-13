@@ -8,11 +8,11 @@ import lombok.extern.log4j.Log4j2;
 @Data
 @Log4j2
 @ToString
-public class uploadImageResponse {
+public class UploadImageResponse {
     private String src;
     private String srcSet;
 
-    public uploadImageResponse(ImageFile imageFile) {
+    public UploadImageResponse(ImageFile imageFile) {
         this.src = imageFile.getSrc();
         this.srcSet = imageFile.getSrcSet();
     }

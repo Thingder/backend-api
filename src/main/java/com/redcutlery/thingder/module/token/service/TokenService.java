@@ -39,6 +39,10 @@ public class TokenService {
         return generate(phone, PIN_TTL, PIN_SECRET);
     }
 
+    public Token generateEmail(String email) {
+        return generate(email, PIN_TTL, PIN_SECRET);
+    }
+
     public Token generateAccess(String email) {
         return generate(email, ACCESS_TTL, ACCESS_SECRET);
     }

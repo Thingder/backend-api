@@ -47,14 +47,14 @@ public class ImageFile {
     }
 
     public String getSrc() {
-        return "/image" + this.imageInfo.getUrl();
+        return this.imageInfo.getUrl();
     }
 
     public String getSrcSet() {
         return this.getResizedImageFiles().stream()
-                .map(resizedImageFile -> "/image" +
+                .map(resizedImageFile ->
                         resizedImageFile.getImageInfo().getUrl() + " " +
-                        resizedImageFile.getWidth().toString() + "w")
+                                resizedImageFile.getWidth().toString() + "w")
                 .collect(Collectors.joining(", "));
     }
 }

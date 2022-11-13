@@ -2,6 +2,7 @@ package com.redcutlery.thingder.domain.member.entity;
 
 import com.google.common.collect.Streams;
 import com.redcutlery.thingder.api.auth.dto.register.RegisterRequest;
+import com.redcutlery.thingder.api.auth.dto.udpateMy.ReqUpdateMy;
 import com.redcutlery.thingder.domain.MemberRelation.entity.MemberRelation;
 import com.redcutlery.thingder.domain.image.dto.InsertImage;
 import com.redcutlery.thingder.domain.image.dto.SelectImage;
@@ -33,9 +34,10 @@ public class Member {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<MemberRole> roleSet = new HashSet<>();
 
+
     public enum Status {
         BANNED,
-        CERTIFIED
+        CERTIFIED;
     }
 
     private Status status;
@@ -46,6 +48,7 @@ public class Member {
     private List<MemberImage> images = new ArrayList<>();
 
     private String nickname;
+
     private String type;
     private Integer genYear;
     private Integer genMonth;
@@ -54,7 +57,6 @@ public class Member {
     private String tag;
     private String description;
     private String story;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     @ToString.Exclude
     List<MemberRelation> picks = new ArrayList<>();
@@ -79,6 +81,20 @@ public class Member {
         this.tag = registerRequest.getTag();
         this.description = registerRequest.getDescription();
         this.story = registerRequest.getStory();
+    }
+
+    public void update(ReqUpdateMy reqUpdateMy) {
+        insertImages(reqUpdateMy.getImages());
+
+        this.nickname = reqUpdateMy.getNickname();
+        this.type = reqUpdateMy.getType();
+        this.genYear = reqUpdateMy.getGenYear();
+        this.genMonth = reqUpdateMy.getGenMonth();
+        this.genCountry = reqUpdateMy.getGenCountry();
+        this.brand = reqUpdateMy.getBrand();
+        this.tag = reqUpdateMy.getTag();
+        this.description = reqUpdateMy.getDescription();
+        this.story = reqUpdateMy.getStory();
     }
 
     public MemberImage insertImage(InsertImage image, Long index) {

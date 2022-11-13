@@ -12,6 +12,7 @@ import com.redcutlery.thingder.api.auth.dto.register.RegisterResponse;
 import com.redcutlery.thingder.api.auth.dto.resetPassword.ResetPasswordRequest;
 import com.redcutlery.thingder.api.auth.dto.sendEmail.SendEmailResponse;
 import com.redcutlery.thingder.api.auth.dto.sendPin.SendPinResponse;
+import com.redcutlery.thingder.api.auth.dto.udpateMy.ReqUpdateMy;
 import com.redcutlery.thingder.api.auth.transaction.AuthTransaction;
 import com.redcutlery.thingder.domain.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -70,6 +71,11 @@ public class AuthController {
     }
 
     private final MemberService memberService;
+
+    @PutMapping("/my")
+    public void updateMy(@RequestBody ReqUpdateMy reqUpdateMy) {
+        memberService.updateMy(reqUpdateMy);
+    }
 
     @GetMapping("/my")
     @Transactional

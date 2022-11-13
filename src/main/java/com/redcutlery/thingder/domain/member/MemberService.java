@@ -2,6 +2,7 @@ package com.redcutlery.thingder.domain.member;
 
 import com.redcutlery.thingder.api.auth.dto.login.LoginRequest;
 import com.redcutlery.thingder.api.auth.dto.register.RegisterRequest;
+import com.redcutlery.thingder.api.auth.dto.udpateMy.ReqUpdateMy;
 import com.redcutlery.thingder.api.matching.dto.pick.PickRequest;
 import com.redcutlery.thingder.domain.MemberRelation.entity.MemberRelation;
 import com.redcutlery.thingder.domain.MemberRelation.repository.MemberRelationRepository;
@@ -13,6 +14,7 @@ import com.redcutlery.thingder.domain.member.repository.MemberRepository;
 import com.redcutlery.thingder.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +44,11 @@ public class MemberService {
         member.setPhone(phone);
         member.setRoleSet(Set.of(MemberRole.USER));
         return memberRepository.save(member);
+    }
+
+    public void updateMy(ReqUpdateMy reqUpdateMy) {
+        var member = findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        member.update(reqUpdateMy);
     }
 
     public Member findByEmail(String email) {

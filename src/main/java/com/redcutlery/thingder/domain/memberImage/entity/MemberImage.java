@@ -25,7 +25,7 @@ public class MemberImage {
     @ToString.Exclude
     private Member member;
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_uid")
     @ToString.Exclude
     private Image image;

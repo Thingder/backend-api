@@ -49,7 +49,9 @@ public class MemberService {
     public void updateMy(ReqUpdateMy reqUpdateMy) {
         var member = findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         member.update(reqUpdateMy);
-        memberRepository.save(member);
+        log.info(member.getImages().get(0).getImage());
+        member = memberRepository.save(member);
+        log.info(member.getImages().get(0).getImage());
     }
 
     public Member findByEmail(String email) {

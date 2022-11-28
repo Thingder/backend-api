@@ -64,6 +64,7 @@ public class MemberService {
         members = members.stream()
                 .filter(m -> !m.getPicks().contains(member))
                 .filter(m -> !m.equals(member))
+                .filter(m -> m.getStatus() != Member.Status.BANNED)
                 .collect(Collectors.toList());
 
         return members;

@@ -46,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/email/check")
-    public CheckEmailResponse checkEmail(@RequestParam CheckEmailRequest checkEmailRequest) {
+    public CheckEmailResponse checkEmail(@RequestBody CheckEmailRequest checkEmailRequest) {
         return authTransaction.checkEmail(checkEmailRequest);
     }
 

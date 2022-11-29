@@ -62,7 +62,7 @@ public class MemberService {
         var members = memberRepository.findAll();
 
         members = members.stream()
-                .filter(m -> !m.getPicks().contains(member))
+                .filter(m -> m.getSubjects().stream().noneMatch(p -> p.getMember().equals(member)))
                 .filter(m -> !m.equals(member))
                 .filter(m -> m.getStatus() != Member.Status.BANNED)
                 .collect(Collectors.toList());

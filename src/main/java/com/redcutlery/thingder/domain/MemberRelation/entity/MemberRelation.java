@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberRelation {
     public enum RelationType {
-        LIKE, DISLIKE, BLOCK
+        LIKE, DISLIKE, BLOCK, ADMIN
     }
 
     @Id

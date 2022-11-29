@@ -41,4 +41,8 @@ public class ChatService {
     public List<ChatRoom> findAll() {
         return chatRoomRepository.findAll();
     }
+
+    public ChatRoom save(ChatRoom chat) {
+        return chatRoomRepository.save(chat);
+    }
 }

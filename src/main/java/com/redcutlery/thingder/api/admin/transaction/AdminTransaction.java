@@ -76,7 +76,7 @@ public class AdminTransaction {
 
     public ResFindAllChat findAllChat() {
         var chatRooms = chatService.findAll();
-        chatRooms = chatRooms.stream().filter(chatRoom -> chatRoom.getMemberRelations().isEmpty())
+        chatRooms = chatRooms.stream().filter(chatRoom -> chatRoom.getMemberRelations().size() < 2)
                 .collect(Collectors.toList());
         return new ResFindAllChat(chatRooms);
     }

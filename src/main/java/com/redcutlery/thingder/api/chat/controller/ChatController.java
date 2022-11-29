@@ -25,4 +25,9 @@ public class ChatController {
     public void report(@PathVariable UUID chatRoomUid, @RequestBody ReqReportChat reqReportChat) {
         chatTransaction.report(chatRoomUid, reqReportChat);
     }
+
+    @PostMapping("/admin")
+    public UUID chatAdmin() {
+        return chatTransaction.chatAdmin().getUid();
+    }
 }

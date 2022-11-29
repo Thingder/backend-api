@@ -8,8 +8,10 @@ import java.util.UUID;
 @Data
 public class ResFindAllChatElement {
     private UUID uid;
+    private UUID memberUid;
 
     public ResFindAllChatElement(ChatRoom chatRoom) {
         this.uid = chatRoom.getUid();
+        this.memberUid = chatRoom.getMemberRelations().get(0).getMember().getUid();
     }
 }
